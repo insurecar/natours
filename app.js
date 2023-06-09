@@ -17,4 +17,3 @@ app.post('/', (req, res) => {
 app.listen(port, () => {
   console.log(`App is running on port ${port}...`);
 });
-const 🔫 = 12;

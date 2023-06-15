@@ -66,6 +66,30 @@ app.post('/api/v1/tours', (req, res) => {
   );
 });
 
+app.delete('/api/v1/tours/:id', (req, res) => {
+  console.log(req.params.id);
+  const filteredTours = tours.filter(
+    (item) => item.id.toString() !== req.params.id.toString()
+  );
+  console.log(filteredTours);
+
+  fs.writeFile(
+    `${__dirname}/dev-data/data/tours-simple.json`,
+    JSON.stringify(filteredTours),
+    (err) =>
+      res.status(200).json({
+        status: 'success',
+        data: {
+          tours: filteredTours,
+        },
+      })
+  );
+});
+
+app.patch('/api/v1/tours/:id', (res, req) => {
+  console.log('P__A__T__C__H');
+});
+
 const port = 3000;
 app.listen(port, () => {
   console.log(`App is running on port ${port}...`);

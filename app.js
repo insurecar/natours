@@ -3,6 +3,8 @@ const fs = require('fs');
 
 const app = express();
 
+// 1. Middlewares
+
 app.use(express.json());
 
 app.use((req, res, next) => {

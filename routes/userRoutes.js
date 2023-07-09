@@ -40,4 +40,4 @@ const router = express.Router();
 router.route('/').get(getAllUsers).post(createUsers);
 router.route('/:id').get(getUsers).patch(updateUser).delete(deleteUser);
 
-module.export = router;
+module.exports = router;

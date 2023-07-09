@@ -23,8 +23,9 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
 
+//ROUTE HANDLERS
+
 const getAllTours = (req, res) => {
-  console.log(req.requestTime);
   res.status(200).json({
     status: ' success',
     requstedAt: req.requestTime,
@@ -35,30 +36,9 @@ const getAllTours = (req, res) => {
   });
 };
 
-app.get('/api/v1/tours', getAllTours);
-
-const getTour = (req, res) => {
-  if (req.params.id > tours.length) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID',
-    });
-  }
-  const tour = tours.find(({ id }) => req.params.id === id.toString());
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      tour,
-    },
-  });
-};
-
-app.get('/api/v1/tours/:id', getTour);
-
 const createTour = (req, res) => {
-  const newId = tours[tours.length - 1].id + 1;
-  const newTour = Object.assign({ id: newId }, req.body);
+  const id = +tours.at(-1).id + 1;
+  const newTour = { ...req.body, id };
   tours.push(newTour);
 
   fs.writeFile(
@@ -66,7 +46,7 @@ const createTour = (req, res) => {
     JSON.stringify(tours),
     (err) => {
       res.status(201).json({
-        status: 'succcess',
+        status: 'success',
         data: {
           tour: newTour,
         },
@@ -75,41 +55,73 @@ const createTour = (req, res) => {
   );
 };
 
-// app.post('/api/v1/tours', createTour);
-
-// app.delete('/api/v1/tours/:id', (req, res) => {
-//   //My own implementation
-//   const filteredTours = tours.filter(
-//     (item) => item.id.toString() !== req.params.id.toString()
-//   );
-
-//   fs.writeFile(
-//     `${__dirname}/dev-data/data/tours-simple.json`,
-//     JSON.stringify(filteredTours),
-//     (err) =>
-//       res.status(200).json({
-//         status: 'success',
-//         data: {
-//           tours: filteredTours,
-//         },
-//       })
-//   );
-// });
-
-const deleteTour = (req, res) => {
-  if (req.params.id * 1 > tours.length) {
+const getTour = (req, res) => {
+  if (+req.params.id > tours.length) {
     return res.status(404).json({
       status: 'fail',
       message: 'Invalid ID',
     });
   }
 
-  res.status(204).json({
-    status: 'success',
-    data: null,
+  return res.status(200).json({
+    tour: tours.filter(
+      (tour) => tour.id.toString() === req.params.id.toString()
+    ),
   });
 };
 
+const deleteTour = (req, res) => {
+  if (+req.params.id > tours.length) {
+    return res.status(404).json({
+      status: 'Fail',
+      message: 'Invalid ID',
+    });
+  }
+  const updatedWithDeleteTours = tours.filter(
+    (tour) => req.params.id.toString() !== tour.id.toString()
+  );
+
+  fs.writeFile(
+    `${__dirname}/dev-data/data/tours-simple.json`,
+    JSON.stringify(updatedWithDeleteTours),
+    (err) => {
+      res.status(200).json({
+        status: 'success',
+        data: {
+          tours: updatedWithDeleteTours,
+        },
+      });
+    }
+  );
+};
+
+const updateTour = (req, res) => {
+  console.log(req.params);
+  if (+req.params.id > tours.length) {
+    return res.status(404).json({
+      message: 'Fatal error',
+    });
+  }
+  const tourForUpdate = tours.map((tour) =>
+    +tour.id === +req.params.id ? { ...req.body, id: tour.id } : tour
+  );
+  console.log(tourForUpdate);
+
+  fs.writeFile(
+    `${__dirname}/dev-data/data/tours-simple.json`,
+    JSON.stringify(tourForUpdate),
+    (err) => {
+      return res.status(200).json({
+        status: 'completed',
+        tours: tourForUpdate,
+      });
+    }
+  );
+};
+
+//3) ROUTS
+
+////U___S___E___R___S
 const getAllUsers = (req, res) => {
   res.status(500).json({
     status: 'error',
@@ -145,22 +157,20 @@ const deleteUser = (req, res) => {
   });
 };
 
-app.delete('/api/v1/tours/:id', deleteTour);
+const tourRouter = express.Router();
+const userRouter = express.Router();
 
-app.patch('/api/v1/tours/:id', (res, req) => {
-  console.log('P__A__T__C__H');
-});
+app.use('/api/v1/tours', tourRouter);
+app.use('/api/v1/users', userRouter);
 
-app.route('/api/v1/tours').get(getAllTours).post(createTour);
+tourRouter.route('/').get(getAllTours).post(createTour);
+tourRouter.route('/:id').get(getTour).delete(deleteTour).patch(updateTour);
 
-app.route('/api/v1/users').get(getAllUsers).post(createUsers);
+userRouter.route('/').get(getAllUsers).post(createUsers);
 
-app
-  .route('/api/v1/users/:id')
-  .get(getUsers)
-  .patch(updateUser)
-  .delete(deleteUser);
+userRouter.route('/:id').get(getUsers).patch(updateUser).delete(deleteUser);
 
+// 4) Start SERVER
 const port = 3000;
 app.listen(port, () => {
   console.log(`App is running on port ${port}...`);

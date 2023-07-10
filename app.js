@@ -3,6 +3,7 @@ const morgan = require('morgan');
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
+const gridRouter = require('./routes/gridRoutes');
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use((req, res, next) => {
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/grids', gridRouter);
 
 // 4) Start SERVER
 // const port = 3000;

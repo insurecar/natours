@@ -15,31 +15,6 @@ exports.aliasTopTours = (req, res, next) => {
   next();
 };
 
-class APIFeatures {
-  constructor(query, queryString) {
-    this.query = query;
-    this.queryString = queryString;
-    console.log("query", query);
-  }
-
-  filter() {
-    const queryObj = { ...this.queryString };
-    const excludeFields = ["page", "sort", "limit", "fields"];
-    excludeFields.forEach((el) => delete queryObj[el]);
-
-    //2) Advanced filtering
-    const queryStr = JSON.stringify(queryObj).replace(
-      /\b(gte|gt|lte|lt)\b/g,
-      (match) => `$${match}`
-    );
-
-    // let query = Tour.find(JSON.parse(queryString));
-    this.query.find(JSON.parse(queryStr));
-
-    return this;
-  }
-}
-
 exports.checkBody = (req, res, next) => {
   if (!req.body.name || !req.body.price) {
     return res.status(400).json({
@@ -114,7 +89,6 @@ exports.getAllTours = async (req, res) => {
     }
 
     //Execute
-    const features = new APIFeatures(Tour.find(), req.query).filter();
     const tours = await query;
 
     //Send Response

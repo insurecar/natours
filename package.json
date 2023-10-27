@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon server.js",
-    "start:prod": "NODE_ENV=production nodemon server.js"
+    "start:prod": "NODE_ENV=production nodemon server.js",
+    "cl": "npx kill-port 3000"
   },
   "author": "",
   "license": "ISC",
@@ -14,6 +15,7 @@
     "express": "^4.18.2",
     "mongodb": "6.1",
     "mongoose": "^5.13.20",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "slugify": "^1.6.6"
   }
 }

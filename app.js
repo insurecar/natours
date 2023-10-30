@@ -18,7 +18,10 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  console.log("%c Hello from the middleware", 'background: orange; color: white; padding: 30px; border-radius: 20px; font-size: 20px');
+  console.log(
+    "%c Hello from the middleware",
+    "background: orange; color: white; padding: 30px; border-radius: 20px; font-size: 20px"
+  );
   next();
 });
 
@@ -29,6 +32,14 @@ app.use((req, res, next) => {
 app.use("/api/v1/tours", tourRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/my-users", myUserRoute);
+
+app.all("*", (req, res, next) => {
+  res.status(404).json({
+    status: "fail",
+    message: `Can't find ${req.originalUrl} on this server!`,
+  });
+  next();
+});
 
 //4) Start a server
 

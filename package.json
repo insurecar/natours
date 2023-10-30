@@ -6,7 +6,8 @@
   "scripts": {
     "start": "nodemon server.js",
     "start:prod": "NODE_ENV=production nodemon server.js",
-    "cl": "npx kill-port 3000"
+    "cl": "npx kill-port 3000",
+    "debug": "ndb server.js"
   },
   "author": "",
   "license": "ISC",

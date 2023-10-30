@@ -18,7 +18,7 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  console.log("Hello from the middleware");
+  console.log("%c Hello from the middleware", 'background: orange; color: white; padding: 30px; border-radius: 20px; font-size: 20px');
   next();
 });
 

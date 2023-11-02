@@ -1,6 +1,8 @@
 const express = require("express");
 const morgan = require("morgan");
 
+const AppError = require("./utils/appError");
+const globalErrorHandler = require("./controllers/errorController");
 const tourRouter = require("./routes/tourRouts");
 const userRouter = require("./routes/userRoutes");
 const myUserRoute = require("./routes/myUserRoute");
@@ -18,7 +20,10 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  console.log("Hello from the middleware");
+  console.log(
+    "%c Hello from the middleware",
+    "background: orange; color: white; padding: 30px; border-radius: 20px; font-size: 20px"
+  );
   next();
 });
 
@@ -29,6 +34,12 @@ app.use((req, res, next) => {
 app.use("/api/v1/tours", tourRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/my-users", myUserRoute);
+
+app.all("*", (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+});
+
+app.use(globalErrorHandler);
 
 //4) Start a server
 

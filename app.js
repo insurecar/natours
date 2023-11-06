@@ -16,16 +16,17 @@ app.use(express.static(`${__dirname}/public`));
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
+  // console.log("😶‍🌫️😇", req.headers);
   next();
 });
 
-app.use((req, res, next) => {
-  console.log(
-    "%c Hello from the middleware",
-    "background: orange; color: white; padding: 30px; border-radius: 20px; font-size: 20px"
-  );
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log(
+//     "%c Hello from the middleware",
+//     "background: orange; color: white; padding: 30px; border-radius: 20px; font-size: 20px"
+//   );
+//   next();
+// });
 
 //2) ROUTE HANDLERS
 

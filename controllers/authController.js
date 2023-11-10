@@ -48,7 +48,6 @@ exports.login = catchAsync(async (req, res, next) => {
 
   //3) If everything is ok, send token to the client
   const token = await signToken(user._id);
-  log(token, "asjfjaofjsflkgldfngjkdfhgjkdfhgjkdfhgjkdfbgh");
   res.status(200).json({
     status: "success",
     token,
@@ -58,6 +57,7 @@ exports.login = catchAsync(async (req, res, next) => {
 exports.protect = catchAsync(async (req, res, next) => {
   //1) Getting token and check of it is there
   let token;
+  console.log(req.headers.authorization, "👧👧👧👧👧👧👧👧");
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")

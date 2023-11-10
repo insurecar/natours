@@ -20,7 +20,7 @@ router.post("/signup", signup);
 router.post("/login", login);
 
 router.post("/forgotPassword", forgotPassword);
-// router.post("/resetPassword", reset);
+// router.patch("/resetPassword/:token", reset);
 
 router.route("/").get(getAllUsers).post(createUser);
 
